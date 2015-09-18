@@ -81,7 +81,7 @@ class InputImageFetcher(CodependentThread):
         self.latest_frame_is_from_cam = True
         self.static_file_mode = False
         # -----------------------------------
-        
+
         self.settings = settings
         self.static_file_stretch_mode = self.settings.static_file_stretch_mode
         
@@ -307,6 +307,30 @@ class LiveVis(object):
         self.help_buffer = self.window_buffer.copy() # For rendering help mode
         self.help_pane.data = self.help_buffer[self.help_pane.i_begin:self.help_pane.i_end, self.help_pane.j_begin:self.help_pane.j_end]
 
+
+        # ANH: add listener for mouse clicks
+        cv2.setMouseCallback(self.window_name, self.on_mouse_click)
+
+
+    def on_mouse_click(self, event, x, y, flags, param):
+        '''
+        Handle all button presses.
+        '''
+
+        # check to see if the left mouse button was released
+        if event == cv2.EVENT_LBUTTONUP:
+            print "Clicked: %s - %s" % ( x, y )
+
+            buttons = self.settings.buttons
+
+            for b in buttons:
+                bbox = buttons[b]
+
+                if bbox[0] < x < bbox[1] and bbox[2] < y < bbox[3] :
+                    self.app.handle_mouse(b)
+                    # print "[ %s ]" % b
+                    break
+
     def run_loop(self):
         self.quit = False
         # Setup
@@ -321,6 +345,9 @@ class LiveVis(object):
             print 'Starting app:', app_name
             app.start()
             heartbeat_functions.extend(app.get_heartbeats())
+
+            # ANH: Horrible hack
+            self.app = app
 
         ii = 0
         since_keypress = 999

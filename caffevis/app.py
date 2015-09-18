@@ -440,6 +440,7 @@ class CaffeVisAppState(object):
                     self.backprop_layer = self.layer
                     self.backprop_unit = self.selected_unit                    
             elif tag == 'zoom_mode':
+
                 self.layers_pane_zoom_mode = (self.layers_pane_zoom_mode + 1) % 3
                 if self.layers_pane_zoom_mode == 2 and not self.back_enabled:
                     # Skip zoom into backprop pane when backprop is off
@@ -464,6 +465,38 @@ class CaffeVisAppState(object):
             self.drawing_stale = key_handled   # Request redraw any time we handled the key
 
         return (None if key_handled else key)
+
+    def handle_mouse(self, key):
+        #print 'Ignoring key:', key
+        if key == -1:
+            return key
+
+        layers = [ 'conv1', 'p1', 'n1', 'conv2', 'p2', 'n2', 'conv3', 'conv4', 'conv5', 'p5', 'fc6', 'fc7', 'fc8', 'prob' ]
+
+        with self.lock:
+            key_handled = True
+            # tag = self.bindings.get_tag(key)
+
+            if key in layers:
+
+                self.layer_idx = layers.index(key)
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+
+            else:
+                key_handled = False
+
+            if not self.backprop_selection_frozen:
+                # If backprop_selection is not frozen, backprop layer/unit follows selected unit
+                if not (self.backprop_layer == self.layer and self.backprop_unit == self.selected_unit):
+                    self.backprop_layer = self.layer
+                    self.backprop_unit = self.selected_unit
+                    self.back_stale = True    # If there is any change, back diffs are now stale
+
+            self.drawing_stale = key_handled   # Request redraw any time we handled the key
+
+        return (None if key_handled else key)
+
 
     def redraw_needed(self):
         with self.lock:
@@ -1078,6 +1111,9 @@ class CaffeVisApp(BaseApp):
 
     def handle_key(self, key, panes):
         return self.state.handle_key(key)
+
+    def handle_mouse(self, key):
+        return self.state.handle_mouse(key)
 
     def get_back_what_to_disp(self):
         '''Whether to show back diff information or stale or disabled indicator'''
