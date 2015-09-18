@@ -333,6 +333,9 @@ class CaffeVisAppState(object):
         self.drawing_stale = True
         kh,_ = self.bindings.get_key_help('help_mode')
         self.extra_msg = '%s for help' % kh[0]
+
+        # ANH: Start the program with the 1st filter being selected
+        self.move_selection('down')
         
     def handle_key(self, key):
         #print 'Ignoring key:', key
