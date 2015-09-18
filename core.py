@@ -328,7 +328,6 @@ class LiveVis(object):
 
                 if bbox[0] < x < bbox[1] and bbox[2] < y < bbox[3] :
                     self.app.handle_mouse(b)
-                    # print "[ %s ]" % b
                     break
 
     def run_loop(self):

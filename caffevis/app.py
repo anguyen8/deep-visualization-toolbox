@@ -482,6 +482,13 @@ class CaffeVisAppState(object):
                 self.layer_idx = layers.index(key)
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
+                self.selected_unit = -1
+
+            elif key == 'face_detector':
+                self.layer_idx = 8
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = 151
 
             else:
                 key_handled = False
@@ -704,12 +711,13 @@ class CaffeVisApp(BaseApp):
                 self._draw_aux_pane(panes['caffevis_aux'], layer_data_3D_highres)
             if 'caffevis_prob' in panes:
                 self._draw_prob_pane(panes['caffevis_prob'], layer_data_3D_highres)
+
+            # ANH: add a pane for feature detectors
+            if 'caffevis_feature_detectors' in panes:
+                self._draw_feature_detector_pane(panes['caffevis_feature_detectors'])
+
             if 'caffevis_back' in panes:
                 # Draw back pane as normal
-
-                # ANH: Change this to draw filter
-                # self._draw_back_pane(panes['caffevis_aux'])
-
                 # self._draw_back_pane(panes['caffevis_back'])
                 if self.state.layers_pane_zoom_mode == 2:
                     # ALSO draw back pane into layers pane
@@ -826,13 +834,30 @@ class CaffeVisApp(BaseApp):
 
         cv2_typeset_text(pane.data, strings, loc)
 
-    def _draw_status_pane(self, pane):
+    def _draw_feature_detector_pane(self, pane):
         pane.data[:] = to_255(self.settings.window_background)
 
+        defaults = {'face':  getattr(cv2, self.settings.caffevis_status_face),
+                    'fsize': self.settings.caffevis_status_fsize,
+                    'clr':   to_255(self.settings.caffevis_status_clr),
+                    'thick': self.settings.caffevis_status_thick}
+        loc = self.settings.caffevis_status_loc[::-1]   # Reverse to OpenCV c,r order
+
+        status = StringIO.StringIO()
+        with self.state.lock:
+            # print >>status, 'opt' if self.state.pattern_mode else ('back' if self.state.layers_show_back else 'fwd'),
+            # print >>status, '%s_%d |' % (self.state.layer, self.state.selected_unit),
+            
+            print >>status, "Face detector | Text detector | Circle detector | Wrinkle detector"
+
+        strings = [FormattedString(line, defaults) for line in status.getvalue().split('\n')]
+
+        cv2_typeset_text(pane.data, strings, loc,
+                         line_spacing = self.settings.caffevis_status_line_spacing)
 
 
-
-
+    def _draw_status_pane(self, pane):
+        pane.data[:] = to_255(self.settings.window_background)
 
         defaults = {'face':  getattr(cv2, self.settings.caffevis_status_face),
                     'fsize': self.settings.caffevis_status_fsize,
@@ -843,6 +868,10 @@ class CaffeVisApp(BaseApp):
         status = StringIO.StringIO()
         with self.state.lock:
             print >>status, 'opt' if self.state.pattern_mode else ('back' if self.state.layers_show_back else 'fwd'),
+            print >>status, '%s_%d' % (self.state.layer, self.state.selected_unit),
+
+            # ANH: disable these as they're not needed
+            '''
             print >>status, '%s_%d |' % (self.state.layer, self.state.selected_unit),
             if not self.state.back_enabled:
                 print >>status, 'Back: off',
@@ -853,6 +882,7 @@ class CaffeVisApp(BaseApp):
                                                            self.state.back_filt_mode),
             print >>status, '|',
             print >>status, 'Boost: %g/%g' % (self.state.layer_boost_indiv, self.state.layer_boost_gamma)
+            '''
 
             if self.state.extra_msg:
                 print >>status, '|', self.state.extra_msg
