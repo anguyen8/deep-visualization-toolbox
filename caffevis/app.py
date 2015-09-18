@@ -490,6 +490,30 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 151
 
+            elif key == 'circle_detector':
+                self.layer_idx = 8
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = 81
+
+            elif key == 'edge_detector':
+                self.layer_idx = 0
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = 43
+
+            elif key == 'text_detector':
+                self.layer_idx = 8
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = 4
+
+            elif key == 'wrinkle_detector':
+                self.layer_idx = 8
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = 129
+
             else:
                 key_handled = False
 
@@ -848,7 +872,7 @@ class CaffeVisApp(BaseApp):
             # print >>status, 'opt' if self.state.pattern_mode else ('back' if self.state.layers_show_back else 'fwd'),
             # print >>status, '%s_%d |' % (self.state.layer, self.state.selected_unit),
             
-            print >>status, "Face detector | Text detector | Circle detector | Wrinkle detector"
+            print >>status, "Face detector | Text detector | Circle detector | Wrinkle detector | Edge detector"
 
         strings = [FormattedString(line, defaults) for line in status.getvalue().split('\n')]
 
