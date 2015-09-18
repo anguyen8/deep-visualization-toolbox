@@ -466,7 +466,7 @@ class CaffeVisAppState(object):
 
         return (None if key_handled else key)
 
-    def handle_mouse(self, key):
+    def handle_mouse(self, key, sel_idx=None):
         #print 'Ignoring key:', key
         if key == -1:
             return key
@@ -513,6 +513,11 @@ class CaffeVisAppState(object):
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 129
+
+            elif key == 'jump_to_cell':
+                self.layer = self._layers[self.layer_idx]
+                self._ensure_valid_selected()
+                self.selected_unit = sel_idx
 
             else:
                 key_handled = False
@@ -1019,6 +1024,9 @@ class CaffeVisApp(BaseApp):
                 highlights[self.state.backprop_unit] = self.settings.caffevis_layer_clr_back_sel  # in [0,1] range
 
         _, display_2D = tile_images_make_tiles(display_3D, padval = padval, highlights = highlights)
+
+        # print "----------------"
+        # print tile_rows, tile_cols
         #print ' ===tile_conv dtype', tile_conv.dtype, 'range', tile_conv.min(), tile_conv.max()
 
         if display_3D_highres is None:
@@ -1166,8 +1174,8 @@ class CaffeVisApp(BaseApp):
     def handle_key(self, key, panes):
         return self.state.handle_key(key)
 
-    def handle_mouse(self, key):
-        return self.state.handle_mouse(key)
+    def handle_mouse(self, key, idx=None):
+        return self.state.handle_mouse(key, idx)
 
     def get_back_what_to_disp(self):
         '''Whether to show back diff information or stale or disabled indicator'''

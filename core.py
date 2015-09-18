@@ -9,6 +9,7 @@ from threading import Lock, RLock, Thread
 import time
 import glob
 import re
+import math
 
 try:
     import cv2
@@ -319,16 +320,37 @@ class LiveVis(object):
 
         # check to see if the left mouse button was released
         if event == cv2.EVENT_LBUTTONUP:
-            print "Clicked: %s - %s" % ( x, y )
+            # print "Clicked: %s - %s" % ( x, y )
 
             buttons = self.settings.buttons
+            bubble = True
 
             for b in buttons:
                 bbox = buttons[b]
 
                 if bbox[0] < x < bbox[1] and bbox[2] < y < bbox[3] :
                     self.app.handle_mouse(b)
+                    bubble = False
                     break
+
+            if bubble:
+                width = height = 700
+                bbox = (243, 940, 20, 722)
+                if bbox[0] < x < bbox[1] and bbox[2] < y < bbox[3] :
+
+                    sx = x - bbox[0]
+                    sy = y - bbox[2]
+
+                    col = math.ceil(sx / float(width) * self.app.state.tiles_height_width[0])
+                    row = math.ceil(sy / float(height) * self.app.state.tiles_height_width[1])
+                    
+                    tile_idx = (row - 1) * self.app.state.tiles_height_width[0] + (col - 1)
+
+                    # print "idx", tile_idx
+                    # print "col: %s  | row: %s" % (col, row)
+                    # Each row has this many tiles
+                    # self.app.state.tiles_height_width
+                    self.app.handle_mouse("jump_to_cell", int(tile_idx))
 
     def run_loop(self):
         self.quit = False
