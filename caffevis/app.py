@@ -9,6 +9,9 @@ import time
 import StringIO
 from threading import Lock
 
+from os import system   # for say command on OSX
+# from thread import start_new_thread # multithreading for say command
+
 from misc import WithTimer
 from numpy_cache import FIFOLimitedArrayCache
 from app_base import BaseApp
@@ -487,11 +490,15 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = -1
 
+                system('say Layer "%s' % key)
+
             elif key == 'Face detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 151
+
+                system('say "%s. Please put your face in front of camera."' % key)
 
             elif key == 'Circle detector':
                 self.layer_idx = 8
@@ -499,17 +506,23 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 81
 
+                system('say %s' % key)
+
             elif key == 'Edge detector':
                 self.layer_idx = 0
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 43
 
+                system('say %s' % key)
+
             elif key == 'Text detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 4
+
+                system('say %s' % key)
 
             elif key == 'Wrinkle detector':
                 self.layer_idx = 8
@@ -521,6 +534,8 @@ class CaffeVisAppState(object):
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = sel_idx
+
+                system('say neuron %s on layer %s' % (sel_idx, self.layer))
 
             else:
                 key_handled = False
@@ -851,7 +866,6 @@ class CaffeVisApp(BaseApp):
         loc = self.settings.caffevis_control_loc[::-1]   # Reverse to OpenCV c,r order
 
         list_buttons = [ 'conv1', 'p1', 'n1', 'conv2', 'p2', 'n2', 'conv3', 'conv4', 'conv5', 'p5', 'fc6', 'fc7', 'fc8', 'prob' ]
-        # , 'n1', 'conv2', 'conv3' ]
 
         # Draw buttons
         bgcolor = (0, 50, 150)
