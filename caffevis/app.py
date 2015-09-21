@@ -821,6 +821,14 @@ class CaffeVisApp(BaseApp):
         top_5 = probs_flat.argsort()[-1:-6:-1]
 
         strings = []
+
+        # Headings
+        text = '%s %s' % ("Confidence", "What I think I see")
+        fs = FormattedString(text, defaults)
+        fs.fsize *= 0.75
+        strings.append([fs])   # Line contains just fs
+
+        # Top-5 predictions
         pmax = probs_flat[top_5[0]]
         for idx in top_5:
             prob = probs_flat[idx]
