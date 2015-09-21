@@ -487,31 +487,31 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = -1
 
-            elif key == 'face_detector':
+            elif key == 'Face detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 151
 
-            elif key == 'circle_detector':
+            elif key == 'Circle detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 81
 
-            elif key == 'edge_detector':
+            elif key == 'Edge detector':
                 self.layer_idx = 0
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 43
 
-            elif key == 'text_detector':
+            elif key == 'Text detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = 4
 
-            elif key == 'wrinkle_detector':
+            elif key == 'Wrinkle detector':
                 self.layer_idx = 8
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
@@ -883,15 +883,55 @@ class CaffeVisApp(BaseApp):
                     'thick': self.settings.caffevis_status_thick}
         loc = self.settings.caffevis_status_loc[::-1]   # Reverse to OpenCV c,r order
 
+        list_buttons = [ "Face detector", "Text detector", "Circle detector", "Wrinkle detector", "Edge detector" ]
         status = StringIO.StringIO()
         with self.state.lock:
             # print >>status, 'opt' if self.state.pattern_mode else ('back' if self.state.layers_show_back else 'fwd'),
             # print >>status, '%s_%d |' % (self.state.layer, self.state.selected_unit),
             
-            print >>status, "Face detector | Text detector | Circle detector | Wrinkle detector | Edge detector"
+            print >>status, "   ".join(list_buttons)
 
+        # Draw buttons
+        # print ("loc", loc)
+
+        bgcolor = (0, 50, 150)
+
+        offset_x = 243
+        offset_y = 720
+
+        # Button
+        for name in self.settings.buttons:
+
+            if name in list_buttons:
+
+                b = self.settings.buttons[name]
+
+        # button : (245, 390, 725, 745)
+        # y : (5, 30)   -- (725, 745)
+        # x : (0, 150)  -- (245, 390)
+
+
+        # b[0] -= 245
+        # b[1] -= 385
+        # b[2]
+        # print b
+
+        # top-left: 242, 727
+        # bottom-right: 391, 743
+
+
+                cv2.rectangle(pane.data, 
+                    (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
+                    bgcolor, cv2.cv.CV_FILLED)
+
+        # cv2.rectangle(pane.data, (0, 5), (150, 100), bgcolor, cv2.cv.CV_FILLED)
+        # cv2.rectangle(pane.data, (160, 5), (310, 100), bgcolor, cv2.cv.CV_FILLED)
+
+        # cv2.rectangle(data, (locx, locy), (boxsize[0], boxsize[1]), (0,100,0));
+            # cv2.rectangle(data, (locx, locy), (boxsize[0], boxsize[1]), (0,100,0), cv2.cv.CV_FILLED);
+
+        # Draw text
         strings = [FormattedString(line, defaults) for line in status.getvalue().split('\n')]
-
         cv2_typeset_text(pane.data, strings, loc,
                          line_spacing = self.settings.caffevis_status_line_spacing)
 
