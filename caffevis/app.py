@@ -850,6 +850,32 @@ class CaffeVisApp(BaseApp):
 
         loc = self.settings.caffevis_control_loc[::-1]   # Reverse to OpenCV c,r order
 
+        list_buttons = [ 'conv1', 'p1', 'n1', 'conv2', 'p2', 'n2', 'conv3', 'conv4', 'conv5', 'p5', 'fc6', 'fc7', 'fc8', 'prob' ]
+        # , 'n1', 'conv2', 'conv3' ]
+
+        # Draw buttons
+        bgcolor = (0, 50, 150)
+        bordercolor = (0, 0, 50)
+
+        offset_x = 243
+        offset_y = 5
+
+        # Button
+        for name in self.settings.buttons:
+
+            if name in list_buttons:
+
+                b = self.settings.buttons[name]
+
+                cv2.rectangle(pane.data, 
+                    (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
+                    bgcolor, cv2.cv.CV_FILLED)
+
+                cv2.rectangle(pane.data, 
+                    (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
+                    bordercolor)
+
+
         strings = []
         defaults = {'face':  getattr(cv2, self.settings.caffevis_control_face),
                     'fsize': self.settings.caffevis_control_fsize,
@@ -857,7 +883,12 @@ class CaffeVisApp(BaseApp):
                     'thick': self.settings.caffevis_control_thick}
 
         for ii in range(len(self.layer_print_names)):
-            fs = FormattedString(self.layer_print_names[ii], defaults)
+            name = self.layer_print_names[ii]
+
+            if ii == 0:
+                name = " " + name
+
+            fs = FormattedString(name, defaults)
             this_layer = self.state._layers[ii]
             if self.state.backprop_selection_frozen and this_layer == self.state.backprop_layer:
                 fs.clr   = to_255(self.settings.caffevis_control_clr_bp)
@@ -892,9 +923,8 @@ class CaffeVisApp(BaseApp):
             print >>status, "   ".join(list_buttons)
 
         # Draw buttons
-        # print ("loc", loc)
-
         bgcolor = (0, 50, 150)
+        bordercolor = (0, 0, 50)
 
         offset_x = 243
         offset_y = 720
@@ -906,29 +936,13 @@ class CaffeVisApp(BaseApp):
 
                 b = self.settings.buttons[name]
 
-        # button : (245, 390, 725, 745)
-        # y : (5, 30)   -- (725, 745)
-        # x : (0, 150)  -- (245, 390)
-
-
-        # b[0] -= 245
-        # b[1] -= 385
-        # b[2]
-        # print b
-
-        # top-left: 242, 727
-        # bottom-right: 391, 743
-
-
                 cv2.rectangle(pane.data, 
                     (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
                     bgcolor, cv2.cv.CV_FILLED)
 
-        # cv2.rectangle(pane.data, (0, 5), (150, 100), bgcolor, cv2.cv.CV_FILLED)
-        # cv2.rectangle(pane.data, (160, 5), (310, 100), bgcolor, cv2.cv.CV_FILLED)
-
-        # cv2.rectangle(data, (locx, locy), (boxsize[0], boxsize[1]), (0,100,0));
-            # cv2.rectangle(data, (locx, locy), (boxsize[0], boxsize[1]), (0,100,0), cv2.cv.CV_FILLED);
+                cv2.rectangle(pane.data, 
+                    (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
+                    bordercolor)
 
         # Draw text
         strings = [FormattedString(line, defaults) for line in status.getvalue().split('\n')]
