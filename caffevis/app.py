@@ -10,7 +10,7 @@ import StringIO
 from threading import Lock
 
 from os import system   # for say command on OSX
-# from thread import start_new_thread # multithreading for say command
+from thread import start_new_thread # multithreading for say command
 
 from misc import WithTimer
 from numpy_cache import FIFOLimitedArrayCache
@@ -490,7 +490,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = -1
 
-                system('say Layer "%s' % key)
+                msg = 'say Layer "%s"' % key
+                start_new_thread(system, (msg,))
 
             elif key == 'Face detector':
                 self.layer_idx = 8
@@ -498,7 +499,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 151
 
-                system('say "%s. Please put your face in front of camera."' % key)
+                msg = 'say "%s. Please put your face in front of camera."' % key
+                start_new_thread(system, (msg,))
 
             elif key == 'Circle detector':
                 self.layer_idx = 8
@@ -506,7 +508,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 81
 
-                system('say %s' % key)
+                msg = 'say %s' % key
+                start_new_thread(system, (msg,))
 
             elif key == 'Edge detector':
                 self.layer_idx = 0
@@ -514,7 +517,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 43
 
-                system('say %s' % key)
+                msg = 'say %s' % key
+                start_new_thread(system, (msg,))
 
             elif key == 'Text detector':
                 self.layer_idx = 8
@@ -522,7 +526,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 4
 
-                system('say %s' % key)
+                msg = 'say %s' % key
+                start_new_thread(system, (msg,))
 
             elif key == 'Wrinkle detector':
                 self.layer_idx = 8
@@ -530,12 +535,16 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 129
 
+                msg = 'say %s' % key
+                start_new_thread(system, (msg,))
+
             elif key == 'jump_to_cell':
                 self.layer = self._layers[self.layer_idx]
                 self._ensure_valid_selected()
                 self.selected_unit = sel_idx
 
-                system('say neuron %s on layer %s' % (sel_idx, self.layer))
+                msg = 'say neuron %s on layer %s' % (sel_idx, self.layer)
+                start_new_thread(system, (msg,))
 
             else:
                 key_handled = False
