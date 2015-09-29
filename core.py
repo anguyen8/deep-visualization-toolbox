@@ -320,7 +320,7 @@ class LiveVis(object):
 
         # check to see if the left mouse button was released
         if event == cv2.EVENT_LBUTTONUP:
-            # print "Clicked: %s - %s" % ( x, y )
+            print "Clicked: %s - %s" % ( x, y )
 
             buttons = self.settings.buttons
             bubble = True
@@ -333,6 +333,7 @@ class LiveVis(object):
                     bubble = False
                     break
 
+            # Clicking on cells
             if bubble:
                 width = height = 700
                 bbox = (243, 940, 20, 722)
@@ -351,6 +352,15 @@ class LiveVis(object):
                     # Each row has this many tiles
                     # self.app.state.tiles_height_width
                     self.app.handle_mouse("jump_to_cell", int(tile_idx))
+
+                elif 945 < x < 1185 and 0 < y < 245:
+                    self.app.handle_mouse("Synthetic images")
+                elif 945 < x < 1185 and 245 < y < 475:
+                    self.app.handle_mouse("Real images")
+                elif 945 < x < 1185 and 475 < y < 715:
+                    self.app.handle_mouse("Deconv images")
+
+
 
     def run_loop(self):
         self.quit = False

@@ -500,7 +500,7 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 151
 
-                msg = 'say "%s. Please put your face in front of camera."' % key
+                msg = 'say "%s. Show me your face"' % key
                 start_new_thread(system, (msg,))
 
             elif key == 'Circle detector':
@@ -509,7 +509,7 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 81
 
-                msg = 'say %s' % key
+                msg = 'say "%s. Show me some circle"' % key
                 start_new_thread(system, (msg,))
 
             elif key == 'Edge detector':
@@ -518,7 +518,7 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 43
 
-                msg = 'say %s' % key
+                msg = 'say "%s. Show me some object."' % key
                 start_new_thread(system, (msg,))
 
             elif key == 'Text detector':
@@ -527,7 +527,7 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 4
 
-                msg = 'say %s' % key
+                msg = 'say "%s. Please show me some text"' % key
                 start_new_thread(system, (msg,))
 
             elif key == 'Wrinkle detector':
@@ -536,7 +536,7 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 129
 
-                msg = 'say %s' % key
+                msg = 'say "%s. show me some wrinkles on your shirt."' % key
                 start_new_thread(system, (msg,))
 
             elif key == 'jump_to_cell':
@@ -546,7 +546,20 @@ class CaffeVisAppState(object):
 
                 msg = 'say neuron %s on layer %s' % (sel_idx, self.layer)
                 msg = msg.replace("conv", "convolutional")
-                
+
+                start_new_thread(system, (msg,))
+
+            # Right panel
+            elif key == 'Synthetic images':
+                msg = 'say Synthetic images that maximally activate the highlighted neuron'
+                start_new_thread(system, (msg,))
+
+            elif key == 'Real images':
+                msg = 'say Real images that maximally activate the highlighted neuron'
+                start_new_thread(system, (msg,))
+
+            elif key == 'Deconv images':
+                msg = 'say Visual patterns in the real images that activate the highlighted neuron'
                 start_new_thread(system, (msg,))
 
             else:
