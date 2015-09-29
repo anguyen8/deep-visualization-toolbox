@@ -491,6 +491,7 @@ class CaffeVisAppState(object):
                 self.selected_unit = -1
 
                 msg = 'say Layer "%s"' % key
+                msg = msg.replace("conv", "convolutional")
                 start_new_thread(system, (msg,))
 
             elif key == 'Face detector':
@@ -544,6 +545,8 @@ class CaffeVisAppState(object):
                 self.selected_unit = sel_idx
 
                 msg = 'say neuron %s on layer %s' % (sel_idx, self.layer)
+                msg = msg.replace("conv", "convolutional")
+                
                 start_new_thread(system, (msg,))
 
             else:
@@ -846,17 +849,27 @@ class CaffeVisApp(BaseApp):
 
         strings = []
 
+        # Background color for headings
+        cv2.rectangle(pane.data, 
+                    (0, 0), (300, 32), 
+                    (30,30,30), cv2.cv.CV_FILLED)
+
         # Headings
-        text = '%s %s' % ("Confidence", "What I think I see")
+        text = '%s %s' % ("Score", "What I think I see")
         fs = FormattedString(text, defaults)
-        fs.fsize *= 0.75
+        fs.fsize *= 0.9
         strings.append([fs])   # Line contains just fs
+
+        # Spacing between headings and predictions
+        space = FormattedString(" ", defaults)
+        space.fsize *= 0.00
+        strings.append([space])   # Line contains just fs
 
         # Top-5 predictions
         pmax = probs_flat[top_5[0]]
         for idx in top_5:
             prob = probs_flat[idx]
-            text = '%.2f %s' % (prob, self.labels[idx])
+            text = '%.2f  %s' % (prob, self.labels[idx])
             fs = FormattedString(text, defaults)
             #fs.clr = tuple([clr_1[ii]*prob/pmax + clr_0[ii]*(1-prob/pmax) for ii in range(3)])
             fs.clr = tuple([clr_1[ii]*prob + clr_0[ii]*(1-prob) for ii in range(3)])
