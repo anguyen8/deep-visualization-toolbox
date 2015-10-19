@@ -588,6 +588,8 @@ class LiveVis(object):
         self.panes['input'].data[:] = frame_disp
 
     def draw_help(self):
+	self.help_buffer = self.help_buffer.astype(np.float)
+	self.help_pane.data = self.help_pane.data.astype(np.float)
         self.help_buffer[:] *= .7
         self.help_pane.data *= .7
         

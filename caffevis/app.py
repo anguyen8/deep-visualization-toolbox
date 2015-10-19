@@ -865,7 +865,8 @@ class CaffeVisApp(BaseApp):
         # Background color for headings
         cv2.rectangle(pane.data, 
                     (0, 0), (300, 32), 
-                    (30,30,30), cv2.cv.CV_FILLED)
+                    (30,30,30), cv2.FILLED)
+                    #(30,30,30), cv2.cv.CV_FILLED)
 
         # Headings
         text = '%s %s' % ("Score", "What I think I see")
@@ -918,7 +919,8 @@ class CaffeVisApp(BaseApp):
 
                 cv2.rectangle(pane.data, 
                     (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
-                    bgcolor, cv2.cv.CV_FILLED)
+                    bgcolor, cv2.FILLED)
+                    #bgcolor, cv2.cv.CV_FILLED)
 
                 cv2.rectangle(pane.data, 
                     (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
@@ -987,7 +989,8 @@ class CaffeVisApp(BaseApp):
 
                 cv2.rectangle(pane.data, 
                     (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 
-                    bgcolor, cv2.cv.CV_FILLED)
+                    bgcolor, cv2.FILLED)
+                    #bgcolor, cv2.cv.CV_FILLED)
 
                 cv2.rectangle(pane.data, 
                     (b[0] - offset_x, b[2] - offset_y), (b[1] - offset_x, b[3] - offset_y), 

@@ -58,7 +58,8 @@ def read_cam_frame(cap, saveto = None):
     frame = cv2_read_cap_rgb(cap, saveto = saveto)
     frame = frame[:,::-1,:]  # flip L-R for display
     frame -= frame.min()
-    frame *= (255.0 / (frame.max() + 1e-6))
+    frame = frame.astype(np.float)
+    frame *= (255.0 / (float(frame.max()) + 1e-6))
     return frame
 
 def crop_to_square(frame):

@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+import site
+site.addsitedir("/usr/lib/python2.7/dist-packages/")
+
 from core import LiveVis
 from bindings import bindings
 try:
