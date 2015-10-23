@@ -269,7 +269,7 @@ class LiveVis(object):
 
     def init_window(self):
         cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
-        #cv2.setWindowProperty(self.window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.setWindowProperty(self.window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         max_i, max_j = 0, 0
         if len(self.settings.window_panes) == 0:
             raise ImproperlyConfigured('settings.window_panes is empty.')
