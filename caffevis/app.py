@@ -472,6 +472,11 @@ class CaffeVisAppState(object):
 
         return (None if key_handled else key)
 
+    def get_say_cmd(self, str):
+    	# return "echo %s | espeak -v en-us -s 140 -p 60" % str
+    	return 'espeak -ven-us+f4 -s140 "%s"' % str
+
+
     def handle_mouse(self, key, sel_idx=None):
         #print 'Ignoring key:', key
         if key == -1:
@@ -490,8 +495,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = -1
 
-                msg = 'say Layer "%s"' % key
-                msg = msg.replace("conv", "convolutional")
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Face detector':
@@ -500,7 +505,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 151
 
-                msg = 'say "%s. Show me your face"' % key
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Circle detector':
@@ -509,7 +515,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 81
 
-                msg = 'say "%s. Show me some circle"' % key
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Edge detector':
@@ -518,7 +525,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 43
 
-                msg = 'say "%s. Show me some object."' % key
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Text detector':
@@ -527,7 +535,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 4
 
-                msg = 'say "%s. Please show me some text"' % key
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Wrinkle detector':
@@ -536,7 +545,8 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = 129
 
-                msg = 'say "%s. show me some wrinkles on your shirt."' % key
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'jump_to_cell':
@@ -544,22 +554,26 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = sel_idx
 
-                msg = 'say neuron %s on layer %s' % (sel_idx, self.layer)
+                msg = 'neuron %s on layer %s' % (sel_idx, self.layer)
                 msg = msg.replace("conv", "convolutional")
+                msg = self.get_say_cmd(msg)
 
                 start_new_thread(system, (msg,))
 
             # Right panel
             elif key == 'Synthetic images':
-                msg = 'say Synthetic images that maximally activate the highlighted neuron'
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Real images':
-                msg = 'say Real images that maximally activate the highlighted neuron'
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             elif key == 'Deconv images':
-                msg = 'say Visual patterns in the real images that activate the highlighted neuron'
+                msg = self.settings.voiceover[key]
+                msg = self.get_say_cmd(msg)
                 start_new_thread(system, (msg,))
 
             else:
