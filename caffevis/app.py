@@ -554,8 +554,12 @@ class CaffeVisAppState(object):
                 self._ensure_valid_selected()
                 self.selected_unit = sel_idx
 
-                msg = 'neuron %s on layer %s' % (sel_idx, self.layer)
-                msg = msg.replace("conv", "convolutional")
+                layer_name = self.layer
+                if self.layer in layer_renames:
+                	layer_name = layer_renames[self.layer]
+
+                layer_translation = self.settings.voiceover[layer_name]
+                msg = 'Neuron %s on %s' % (sel_idx, layer_translation)
                 msg = self.get_say_cmd(msg)
 
                 start_new_thread(system, (msg,))
